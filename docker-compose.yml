@@ -1,0 +1,40 @@
+version: '3.8'
+
+# volumes:
+  # mongo_db: {}
+
+networks:
+  nesjs-network:
+    driver: bridge
+
+services:
+  mongodb:
+    container_name: mongodb
+    image: mongo:latest
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      # - mongo_db:/data/db
+      - ~/database:/data/db
+    networks:
+      - nesjs-network
+
+  nestjs:
+    container_name: nestjs_DEV
+    init: true
+    ports:
+      - 3000:3000
+    build: . 
+    command: npm run start:dev
+    volumes:
+      - .:/usr/src/app
+    environment:
+      PORT: 3000
+      MONGODB_URI: mongodb://mongodb:27017
+      DB_NAME: scores
+      NAME: estrella
+    depends_on:
+      - mongodb
+    networks:
+      - nesjs-network
