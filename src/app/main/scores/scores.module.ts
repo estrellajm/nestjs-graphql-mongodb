@@ -5,6 +5,7 @@ import { ScoresResolver } from './GraphQL/scores.resolver';
 import { ScoresService } from './service/scores.service';
 import { ScoresController } from './scores.controller';
 import { CoreModule } from 'src/app/core/core.module';
+import { ScoresGateway } from './scores.gateway';
 
 @Module({
   imports: [
@@ -12,6 +13,6 @@ import { CoreModule } from 'src/app/core/core.module';
     CoreModule
   ],
   controllers: [ScoresController],
-  providers: [ScoresResolver, ScoresService]
+  providers: [ScoresResolver, ScoresService, ScoresGateway]
 })
 export class ScoresModule {}
