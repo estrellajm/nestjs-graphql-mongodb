@@ -1,8 +1,8 @@
 {
   "name": "nest-docker",
   "version": "0.0.1",
-  "description": "",
-  "author": "",
+  "description": "NestJS w/ MongoDB 3 Replicas",
+  "author": "Jose Estrella",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {

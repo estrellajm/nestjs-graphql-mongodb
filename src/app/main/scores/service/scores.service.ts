@@ -14,8 +14,7 @@ export class ScoresService {
 
   async getScores() {
     try {
-      return 'yes, this is working';
-      // return await this.scoreModel.find().sort('order').exec();
+      return await this.scoreModel.find().sort('order').exec();
     } catch (error) {
       return new GraphQLError(error);
     }
