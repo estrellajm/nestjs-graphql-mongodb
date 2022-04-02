@@ -11,7 +11,7 @@ import { environment } from './environments/environment';
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    MongooseModule.forRoot(`${environment.URI}`, {
+    MongooseModule.forRoot(`${environment.URI}/estrella`, {
       useNewUrlParser: true,
       directConnection: true
     }),
