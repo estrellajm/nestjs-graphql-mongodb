@@ -2,5 +2,5 @@
 
 export const environment = {
   production: false,
-  URI: 'mongodb://localhost:27017'
+  URI: 'mongodb://mongo1:27017'
 };

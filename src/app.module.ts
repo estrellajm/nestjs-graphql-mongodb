@@ -12,8 +12,8 @@ import { environment } from './environments/environment';
   imports: [
     ConfigModule.forRoot(),
     MongooseModule.forRoot(`${environment.URI}/estrella`, {
-      useNewUrlParser: true,
-      directConnection: true
+      directConnection: true,
+      useNewUrlParser: true
     }),
     GraphQLModule.forRoot<ApolloDriverConfig>({
       driver: ApolloDriver,

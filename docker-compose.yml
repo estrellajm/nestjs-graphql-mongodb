@@ -62,11 +62,11 @@ services:
       ]
 
   nestjs:
-    container_name: nestjs_DEV
-    init: true
+    container_name: nestjs
+    build: .
     ports:
       - 3000:3000
-    build: .
+    init: true
     command: npm run start:dev
     volumes:
       - .:/usr/src/app
