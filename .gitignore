@@ -3,6 +3,7 @@
 /node_modules
 ./database
 database
+mongodb/mongors
 
 # Logs
 logs

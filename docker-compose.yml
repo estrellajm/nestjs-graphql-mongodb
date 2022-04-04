@@ -1,40 +1,78 @@
 version: '3.8'
 
-# volumes:
-#   mongo_db: {}
-
-# networks:
-#   nesjs-network:
-#     driver: bridge
+networks:
+  nesjs-network:
+    driver: bridge
 
 services:
-  # mongodb:
-  #   container_name: mongodb
-  #   image: mongo
-  #   restart: always
-  #   ports:
-  #     - 27017:27017
-  #   volumes:
-  #     # - mongo_db:/data/db
-  #     - ~/database:/data/db
-  #   networks:
-  #     - nesjs-network
+  mongo1:
+    container_name: mongo1
+    image: mongo
+    volumes:
+      - ./mongodb/mongors/data1:/data/db
+      - ./mongodb/rs-init.sh:/scripts/rs-init.sh
+    networks:
+      - nesjs-network
+    ports:
+      - 27017:27017
+    links:
+      - mongo2
+      - mongo3
+    restart: always
+    entrypoint:
+      [
+        "/usr/bin/mongod",
+        "--bind_ip_all",
+        "--replSet",
+        "dbrs"
+      ]
+  mongo2:
+    container_name: mongo2
+    image: mongo
+    volumes:
+      - ./mongodb/mongors/data2:/data/db
+    networks:
+      - nesjs-network
+    ports:
+      - 27018:27017
+    restart: always
+    entrypoint:
+      [
+        "/usr/bin/mongod",
+        "--bind_ip_all",
+        "--replSet",
+        "dbrs"
+      ]
+  mongo3:
+    container_name: mongo3
+    image: mongo
+    volumes:
+      - ./mongodb/mongors/data3:/data/db
+    networks:
+      - nesjs-network
+    ports:
+      - 27019:27017
+    restart: always
+    entrypoint:
+      [
+        "/usr/bin/mongod",
+        "--bind_ip_all",
+        "--replSet",
+        "dbrs"
+      ]
 
   nestjs:
     container_name: nestjs_DEV
     init: true
     ports:
       - 3000:3000
-    build: . 
+    build: .
     command: npm run start:dev
     volumes:
       - .:/usr/src/app
-    environment:
-      PORT: 3000
-      MONGODB_URI: mongodb://localhost:27017
-      DB_NAME: sssss
-      NAME: estrella
-    # depends_on:
-    #   - mongodb
-    # networks:
-    #   - nesjs-network
+    depends_on:
+      - mongo1
+      - mongo2
+      - mongo3
+    networks:
+      - nesjs-network
