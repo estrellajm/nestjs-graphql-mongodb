@@ -14,7 +14,9 @@ export class ScoresService {
 
   async getScores() {
     try {
-      return await this.scoreModel.find().sort('order').exec();
+      return this.scoreModel.find().sort('order').exec();
+
+      // return await this.scoreModel.find().sort('order').exec();
     } catch (error) {
       return new GraphQLError(error);
     }
@@ -32,10 +34,10 @@ export class ScoresService {
     try {
       return await this.scoreModel
         .find({
-          batchID: { $regex: batchID } // finds scores by batchID, ex. "CAV_POC:he02"
+          batchID: { $regex: batchID } // finds scores by batchID
         })
         .sort({ inProgress: -1 }) // sorts by "inProgress: true" to the top
-        .sort({ batchID: -1 }) // sorts by "inProgress: true" to the top
+        .sort({ batchID: -1 }) // sorts by "batchID: true" to the top
         .exec();
     } catch (error) {
       return new GraphQLError(error);
