@@ -8,7 +8,15 @@ export class ScoresController {
 
   @Get()
   getScores(): any {
-    return this.scoresService.getScores();
+    return this.scoresService.getLiveScores();
+  }
+  @Get('add/batchID/:batchID')
+  getScore(@Param('batchID') batchID: string): any {
+    return this.scoresService.addRandomStuff(batchID);
+  }
+  @Get('delete/batchID/:batchID')
+  deleteScore(@Param('batchID') batchID: string): any {
+    return this.scoresService.deleteRandomStuff(batchID);
   }
   // @Get('batchID/:batchID')
   // getScore(@Param('batchID') batchID: string): any {

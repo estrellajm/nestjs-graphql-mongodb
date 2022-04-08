@@ -12,13 +12,32 @@ export class ScoresService {
     private readonly scoreModel: Model<ScoreDocument>
   ) {}
 
+  async getLiveScores(): Promise<any> {
+    try {
+      this.scoreModel.watch().on('change', (data) => {
+        console.log('\n ========================= \n');
+        console.log(data);
+      });
+
+      return this.scoreModel.find().sort('order').exec();
+      // return await this.scoreModel.find().sort('order').exec();
+    } catch (error) {
+      throw new HttpException(
+        {
+          status: HttpStatus.FORBIDDEN,
+          error: 'This is a custom exception message'
+        },
+        HttpStatus.FORBIDDEN
+      );
+    }
+  }
   async getScores() {
     try {
       return this.scoreModel.find().sort('order').exec();
 
       // return await this.scoreModel.find().sort('order').exec();
     } catch (error) {
-      return new GraphQLError(error);
+      throw new HttpException('Failed', HttpStatus.EXPECTATION_FAILED);
     }
   }
   async getScore(_id: string) {
@@ -40,7 +59,7 @@ export class ScoresService {
         .sort({ batchID: -1 }) // sorts by "batchID: true" to the top
         .exec();
     } catch (error) {
-      return new GraphQLError(error);
+      throw new HttpException('Failed', HttpStatus.EXPECTATION_FAILED);
     }
   }
   async getActiveScores() {
@@ -49,17 +68,35 @@ export class ScoresService {
         inProgress: true
       });
     } catch (error) {
-      return new GraphQLError(error);
+      throw new HttpException('Failed', HttpStatus.EXPECTATION_FAILED);
     }
   }
 
+  async addRandomStuff(tmcHostname: string) {
+    const scoreGuid = tmcHostname;
+    const batchID = tmcHostname;
+    const score: Score = new Score({ tmcHostname, scoreGuid, batchID });
+    score.startTime = new Date();
+    try {
+      return await new this.scoreModel(score).save();
+    } catch (error) {
+      throw new HttpException(error, HttpStatus.EXPECTATION_FAILED);
+    }
+  }
+  async deleteRandomStuff(name: string): Promise<any> {
+    try {
+      return await this.scoreModel.findOneAndDelete({ tmcHostname: name });
+    } catch (error) {
+      throw new HttpException(error, HttpStatus.EXPECTATION_FAILED);
+    }
+  }
   async scoreStart(tmcHostname: string, scoreGuid: string, batchID: string) {
     const score: Score = new Score({ tmcHostname, scoreGuid, batchID });
     score.startTime = new Date();
     try {
       return await new this.scoreModel(score).save();
     } catch (error) {
-      return new GraphQLError(error);
+      throw new HttpException('Failed', HttpStatus.EXPECTATION_FAILED);
     }
   }
 
@@ -109,7 +146,7 @@ export class ScoresService {
         return pd;
       });
     } catch (error) {
-      return new GraphQLError(error);
+      throw new HttpException('Failed', HttpStatus.EXPECTATION_FAILED);
     }
   }
 
@@ -127,7 +164,7 @@ export class ScoresService {
         })
         .exec();
     } catch (error) {
-      return new GraphQLError(error);
+      throw new HttpException('Failed', HttpStatus.EXPECTATION_FAILED);
     }
   }
 
